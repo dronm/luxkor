@@ -1,0 +1,46 @@
+http://crm.plpl.ru//index.php?c=DOCOrder_Controller&f=print_upd&v=ViewXML&doc_id=8137
+http://185.54.238.178/API1c.php?cmd=print_upd&doc_ref=5fc29e4b-e487-11e6-9fb2-90f652035645&user_ref=&stamp=0
+
+1) cleint_on_delivery
+DOCOrder_Controller.set_shipped
++++Снабженец по отгрузке
+
+
+
+2)client_deliv_remind
+functions/regl_undeliv_orders_remind
++++ ВРОДЕ СНАБЖЕНЕЦ САМОВЫВОЗ
+
+
+
+3)
+client_change_time
+Delivery_Controller.assign_order_to_vehicle
+Delivery_Controller.remove_order???
++++ПРИНИМАЮЩИЙ изменнение времени
+
+
+4)
+client_on_leave_prod
+по выезду авто из зоны завода
+--- ПРИНИМАЮЩИЙ!
+
+!!! НЕ РЕАЛИЗОВАНО !!!
+
+
+
+5)driver_first_deliv
+functions/regl_driver_first_run.php
++++ВРОДЕ
+
+
+6)
+driver_new_deliv
+ОТ ДАННЫХ GPS
+---!!! НЕ РЕАЛИЗОВАНО !!!
+
+
+
+7) client_on_produced
+DOCOrderController.set_ready
++++ СНАБЖЕНЕЦ,САМОВЫВОЗ

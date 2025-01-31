@@ -1,0 +1,7 @@
+﻿D:\programs\PostgreSQL\9.2\bin\psql -U polimerplast -d polimerplast -f D:\WWW\Apache2\htdocs\polimerplast\build\sql\clients_complete.sql
+Process started >>>
+psql:D:/WWW/Apache2/htdocs/polimerplast/build/sql/clients_complete.sql:12: ╨Ю╨и╨Ш╨С╨Ъ╨Р:  ╨╛╤И╨╕╨▒╨║╨░ ╤Б╨╕╨╜╤В╨░╨║╤Б╨╕╤Б╨░ (╨┐╤А╨╕╨╝╨╡╤А╨╜╨╛╨╡ ╨┐╨╛╨╗╨╛╨╢╨╡╨╜╨╕╨╡: "ALTER")
+╤╥╨╬╩└ 7: ALTER TABLE clients_complete OWNER TO polimerplast;
+       ^
+<<< Process finished. (Exit code 0)
+================ READY ================

@@ -1,0 +1,78 @@
+****************** УСТАНОВКА ПО НА СЕРВЕР ПЛПЛ 02/08 *******************************
+nginx 
+полное описание для ubuntu
+https://nginx.org/en/linux_packages.html#Ubuntu
+Добавил файл
+/etc/nginx/conf.d/localhost.conf
+default.conf убрал в sites-available
+
+php
+https://thishosting.rocks/install-php-on-ubuntu/
+apt-get install software-properties-common
+add-apt-repository ppa:ondrej/php
+apt-get update
+apt-get install php7.3
+php -v
+sudo apt-get install php7.3-fpm php7.3-pgsql php7.3-gd php7.3-xsl php7.3-imap php7.3-zip php7.3-bcmath php7.3-mbstring
+нет пакета php7.3-mcrypt (???) пришлось отключить шифрование в fw_test/db/SessionManager.php
+
+НАСТРОЙКА:
+/etc/php7.3/fpm/pool.d/www.conf
+listen=/tmp/php7.3-fpm.sock
+listen.mode=0666
+
+
+OSRM
+https://github.com/Project-OSRM/osrm-backend/wiki/Building-OSRM
+git clone https://github.com/Project-OSRM/osrm-backend.git
+cd osrm-backend
+mkdir -p build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build .
+sudo cmake --build . --target install
+Установка в 
+/usr/local/bin
+
+
+Зависимости
+sudo apt install build-essential git cmake pkg-config \
+libbz2-dev libstxxl-dev libstxxl1v5 libxml2-dev \
+libzip-dev libboost-all-dev lua5.2 liblua5.2-dev libtbb-dev \
+libluabind-dev libluabind0.9.1v5
+
+************СКРИПТ ЕСТЬ В scripts *************
+#Выкачиваем всю россию 2Гб
+wget -P /home/andrey/osrm-backend/data/ https://download.geofabrik.de/russia-latest.osm.pbf
+
+#Вырезаем область, координаты смотрим по openstreetmap.org
+#лево-низ-право-верх
+/home/andrey/osmconverter/osmconvert /home/andrey/osrm-backend/data/russia-latest.osm.pbf -b=51.899,51.944,77.739,66.670 --complete-ways -o=/home/andrey/osrm-backend/data/russia-latest.plpl.pbf
+
+#Удаляем всю Россию
+rm /home/andrey/osrm-backend/data/russia-latest.osm.pbf
+
+#Подготовка
+/usr/local/bin/osrm-extract -p /home/andrey/osrm-backend/profiles/car.lua  /home/andrey/osrm-backend/data/russia-latest.plpl.pbf
+/usr/local/bin/osrm-contract /home/andrey/osrm-backend/data/russia-latest.plpl.pbf
+
+Сделать ссылку на scripts/osrmd в /etc/init.d/
+/etc/init.d/osrmd start
+
+****************POSTGRES ************************
+https://www.postgresql.org/download/linux/ubuntu/
+apt-get install postgresql-11
+
+Последний постгис
+sudo apt install postgis
+
+Новое АПИ v5
+http://project-osrm.org/docs/v5.22.0/api/#general-options
+curl "http://127.0.0.1:5000/route/v1/driving/13.388860,52.517037;13.385983,52.496891?steps=true"
+
+
+#ЛОКАЛИ
+sudo locale-gen ru_RU
+sudo locale-gen ru_RU.UTF-8
+dpkg-reconfigure locales
+КЛАСТЕР СОЗДАВАТЬ ПРИ ОСНОВНОЙ ЛОКАЛИ ru_RU.UTF-8!!! Иначе дропать и заново ставить!!!

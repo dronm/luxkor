@@ -1,0 +1,1 @@
+/home/andrey/www/includes/osbe/build/templates/build.proj-tmpl/templates.proj-tmpl/models.proj-tmpl/MainMenuContent_Model_js.xsl

@@ -1,0 +1,38 @@
+	//****** Панель Паспорт качества ***************
+	cont = new ControlContainer("kach_l","div",{"className":"panel"});		
+
+	//xslt pattern
+	ctrl = new EditString(id+"_xslt_pattern",
+		{"labelCaption":"Шаблон паспорта качества:","name":"xslt_pattern",
+		"buttonClear":false,"attrs":{"size":"20"},"tableLayout":false,
+		"enabled":false}
+	);
+	this.bindControl(ctrl,{"modelId":model_id,
+		"valueFieldId":"xslt_pattern","keyFieldIds":null},
+	{"valueFieldId":"xslt_pattern","keyFieldIds":null});		
+	cont.addElement(ctrl);			
+	
+	var meth = "set_xslt_pattern";
+	var meth_get = "get_xslt_pattern";
+	var contr = new Product_Controller(new ServConnector(HOST_NAME));
+	//set
+	this.m_setXSLTPm = contr.getPublicMethodById(meth);
+	this.m_setXSLTPm.setParamValue("c","Product_Controller");
+	this.m_setXSLTPm.setParamValue("f",meth);
+	this.m_setXSLTPm.setParamValue("product_id",0);
+	//get
+	this.m_getXSLTPm = contr.getPublicMethodById(meth_get);
+	this.m_getXSLTPm.setParamValue("c","Product_Controller");
+	this.m_getXSLTPm.setParamValue("f",meth_get);
+	this.m_getXSLTPm.setParamValue("product_id",0);	
+	ctrl = new FileLoader(id+"_fileLoader",{
+			"controller":contr,
+			"getMethodId":meth_get,
+			"methodId":meth,
+			"files":{
+				"file1":{"caption":"Загрузка шаблона:","name":"xslt_pattern"}
+			}
+			});
+	cont.addElement(ctrl);
+	this.addControl(cont);		
+	

@@ -1,0 +1,6 @@
+1) Create database. Copy original database, create new with new name,
+	new user
+
+2) Create sql script to delete unnecessary data: documents, firms etc. 
+
+3) Correct interface according to new assignment.

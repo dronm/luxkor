@@ -1,0 +1,18 @@
+CREATE USER polimerplast WITH PASSWORD '159753';
+CREATE DATABASE polimerplast OWNER polimerplast;
+GRANT ALL PRIVILEGES ON DATABASE polimerplast TO polimerplast;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO polimerplast;
+
+!!!
+CREATE EXTENSION postgis;
+SELECT postgis_full_version();
+
+
+#-c - DROP
+#Fc
+#-v verbose
+pg_dump -h localhost -p 5432 -U polimerplast -c -Fc -v polimerplast > plpl.bckup
+
+#clears data -c
+#F - custom format
+pg_restore -h localhost -p 5432 -U polimerplast --dbname polimerplast -c -v -Fc plpl.bckup

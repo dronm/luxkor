@@ -1,0 +1,41 @@
+1) Новый счет
+email_text_order
+DOCOrder_Model.create_alter_order
+
+2) Сброс пароля
+reset_pwd
+ClientUser.reset_pwd
+
+3) Новая учетка
+new_account
+ClientUser.insert
+
+
+4)Изменение заказа
+order_changed
+DOCOrder_Model.update
+
+5)Отгружен хаказ
+shipment
+DOCOrder_Controller.set_shipped
+
+6) balance_to_client
+Акт сверки для клиента
+
+????
+
+
+7) order_wait_for_client
+
+8) order_cancel
+regl_day_routines.php
+
+
+9) order_remind
+
+10) shipment
+DOCOrder_Controller.setshipped
+
+11) order_on_produced
+DOCOrder_Controller.set_ready
+
