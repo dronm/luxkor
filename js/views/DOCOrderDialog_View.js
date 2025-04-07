@@ -1429,12 +1429,13 @@ DOCOrderDialog_View.prototype.afterCopyData = function(){
 // }
 
 DOCOrderDialog_View.prototype.recalcPricesRefreshTotals = function(){
-	if (this.m_delivAddToCostCtrl.getValue()=="true"){
-		this.recalcProductPrices();
-	}
-	else{
-		this.refreshProdTotals();
-	}
+	// if (this.m_delivAddToCostCtrl.getValue()=="true"){
+	// 	this.recalcProductPrices();
+	// }
+	// else{
+	// 	this.refreshProdTotals();
+	// }
+	this.refreshProdTotals();
 }
 
 DOCOrderDialog_View.prototype.recalcProductPrices = function(){

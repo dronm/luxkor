@@ -125,7 +125,7 @@ class DOCOrder_Controller extends ControllerSQLDOCPl{
 		$pm->addParam($param);
 		
 				$param = new FieldExtEnum('deliv_type',',','by_supplier,by_client'
-				,array('required'=>TRUE));
+				,array());
 		$pm->addParam($param);
 		$param = new FieldExtBool('deliv_to_third_party'
 				,array());

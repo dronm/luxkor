@@ -207,7 +207,6 @@ function DOCOrder_Model(options){
 	
 	options.fields.deliv_type = new FieldEnum("deliv_type",filed_options);
 	filed_options.enumValues = 'by_supplier,by_client';
-	options.fields.deliv_type.setRequired(true);
 	
 				
 	
