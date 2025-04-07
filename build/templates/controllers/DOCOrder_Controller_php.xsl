@@ -1310,6 +1310,7 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQLDOCPl{
 				//throw new Exception("quant_confirmed=".$ar['quant_confirmed'].' quant='.$ar['quant']);
 				array_push($items,array(
 					'product_name'=>$ar['product_name'],
+					'product_ref'=>$ar['product_ref'],
 					'group_name'=>$ar['group_name'],
 					'product_group_ref'=>$ar['product_group_ref'],
 					'fin_group'=>$ar['fin_group'],

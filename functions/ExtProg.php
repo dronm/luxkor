@@ -234,6 +234,15 @@ class ExtProg{
 			$struc[(string) $ref[0]]=$ref['name'];
 		}
 	}
+
+	public static function completeProduct($pattern,&$struct){
+		ExtProg::send_query('complete_product',array('templ'=>$pattern, 'count'=>10),$struct);
+	}
+
+	public static function createProductForLuxkor($params, &$struct){
+		ExtProg::send_query('create_product_for_luxkor', $params, $struct);
+	}
+
 	public static function getClientContractList($firmExtId,$clientExtId,&$xml){
 		ExtProg::send_query(
 			'get_client_contract_list',

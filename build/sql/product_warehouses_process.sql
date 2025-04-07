@@ -35,4 +35,3 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE COST 100;
-ALTER FUNCTION product_warehouses_process() OWNER TO polimerplast;

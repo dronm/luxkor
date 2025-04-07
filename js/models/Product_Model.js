@@ -51,6 +51,15 @@ function Product_Model(options){
 	
 	filed_options.autoInc = false;	
 	
+	options.fields.name_for_print = new FieldText("name_for_print",filed_options);
+	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
 	options.fields.mes_length_exists = new FieldBool("mes_length_exists",filed_options);
 	
 				
@@ -471,6 +480,16 @@ function Product_Model(options){
 	
 	options.fields.deleted = new FieldBool("deleted",filed_options);
 	
+				
+	
+	var filed_options = {};
+	filed_options.primaryKey = false;	
+	
+	filed_options.autoInc = false;	
+	
+	options.fields.ref_1c = new FieldString("ref_1c",filed_options);
+	
+			
 		Product_Model.superclass.constructor.call(this,id,options);
 }
 extend(Product_Model,Model);

@@ -203,41 +203,77 @@ function ClientEditObject(fieldId,controlId,inLine,opts){
 }
 extend(ClientEditObject,EditObject);
 
-function ProductEditObject(fieldId,controlId,inLine,defaultId,opts){
-	var contr = new Product_Controller(new ServConnector(HOST_NAME));
-	var pm = contr.getPublicMethodById(contr.METH_GET_LIST);
-	pm.setParamValue(contr.PARAM_COND_FIELDS,"deleted");
-	pm.setParamValue(contr.PARAM_COND_VALS,"false");
-	pm.setParamValue(contr.PARAM_COND_SGNS,"e");
-
-	options =
-		{"attrs":{"required":"required"},
+function ProductEditObject(fieldId,controlId,inLine,opts){
+	opts = opts||{};
+	options = 
+		{"methodId":"complete",
 		"tableLayout":false,
-		"methodId":"get_list",
-		"modelId":"ProductList_Model",
+		"modelId":"ProductComplete_Model",
 		"lookupValueFieldId":"name",
-		"lookupKeyFieldIds":["id"],
+		"lookupKeyFieldIds":["ref"],
 		"keyFieldIds":[fieldId],
-		"controller":contr,
-		"objectView":null,
-		"noSelect":false,
+		"controller":new Product_Controller(new ServConnector(HOST_NAME)),
+		"minLengthForQuery":1,
+		"mid":"1",
+		"objectView":ProductDialog_View,
+		"noSelect":true,
 		"noOpen":true,
-		"winObj":this.m_winObj,
+		//"winObj":opts.winObj,
 		"listView":ProductList_View,
-		"defaultId":(defaultId==undefined)? "undefined":defaultId,
-		"editContClassName":"input-group "+get_bs_col()+"3"
+		"value":opts.descr,
+		//"visible":opts.visible,
+		//"onSelected":opts.onSelected,
+		"attrs":{
+			"fkey_client_id":opts.id||""
+		}
 	};
-	opts = opts ||{};
+	if(opts.required===true||opts.required==undefined){
+		options.attrs.required = "required";
+	}
 	for(var opt in opts){
 		options[opt] = opts[opt];
-	}						
-	if (inLine==undefined || (inLine!=undefined && !inLine)){
-		options["labelCaption"] = "Продукция:";
-	}	
-	ProductEditObject.superclass.constructor.call(this,
-		controlId,options);	
+	}					
+	if ((inLine==undefined || (inLine!=undefined && !inLine)) && options.labelCaption==undefined){
+		options["labelCaption"] = "Наименование:";
+	}
+	ProductEditObject.superclass.constructor.call(this, controlId,options);		
 }
-extend(ProductEditObject,EditSelectObject);
+extend(ProductEditObject,EditObject);
+// function ProductEditObject(fieldId,controlId,inLine,defaultId,opts){
+// 	var contr = new Product_Controller(new ServConnector(HOST_NAME));
+// 	var pm = contr.getPublicMethodById(contr.METH_GET_LIST);
+// 	pm.setParamValue(contr.PARAM_COND_FIELDS,"deleted");
+// 	pm.setParamValue(contr.PARAM_COND_VALS,"false");
+// 	pm.setParamValue(contr.PARAM_COND_SGNS,"e");
+//
+// 	options =
+// 		{"attrs":{"required":"required"},
+// 		"tableLayout":false,
+// 		"methodId":"get_list",
+// 		"modelId":"ProductList_Model",
+// 		"lookupValueFieldId":"name",
+// 		"lookupKeyFieldIds":["id"],
+// 		"keyFieldIds":[fieldId],
+// 		"controller":contr,
+// 		"objectView":null,
+// 		"noSelect":false,
+// 		"noOpen":true,
+// 		"winObj":this.m_winObj,
+// 		"listView":ProductList_View,
+// 		"defaultId":(defaultId==undefined)? "undefined":defaultId,
+// 		"editContClassName":"input-group "+get_bs_col()+"3"
+// 	};
+// 	opts = opts ||{};
+// 	for(var opt in opts){
+// 		options[opt] = opts[opt];
+// 	}						
+// 	if (inLine==undefined || (inLine!=undefined && !inLine)){
+// 		options["labelCaption"] = "Продукция:";
+// 	}	
+// 	ProductEditObject.superclass.constructor.call(this,
+// 		controlId,options);	
+// }
+// extend(ProductEditObject,EditSelectObject);
 
 function ProductForFilterEditObject(fieldId,controlId,inLine,defaultId){
 	options =

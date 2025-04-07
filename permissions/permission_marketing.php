@@ -76,7 +76,15 @@ $permissions = array();
 				
 					$permissions['Product_Controller_get_list_for_order']=TRUE;
 				
+					$permissions['Product_Controller_upsert']=TRUE;
+				
+					$permissions['Product_Controller_create_in_1c']=TRUE;
+				
 					$permissions['Product_Controller_get_filter_list']=TRUE;
+				
+					$permissions['Product_Controller_complete']=TRUE;
+				
+					$permissions['Product_Controller_complete_from_1c']=TRUE;
 				
 					$permissions['ProductCustomSizePrice_Controller_insert']=TRUE;
 				

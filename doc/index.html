@@ -125,6 +125,7 @@
 <li><a href="#ProductList_Model">ProductList_Model</a></li>
 <li><a href="#ProductFilterList_Model">ProductFilterList_Model</a></li>
 <li><a href="#ProductDialog_Model">ProductDialog_Model</a></li>
+<li><a href="#ProductComplete_Model">ProductComplete_Model</a></li>
 <li><a href="#ProductCustomSizePrice_Model">ProductCustomSizePrice_Model</a></li>
 <li><a href="#ProductMeasureUnit_Model">ProductMeasureUnit_Model</a></li>
 <li><a href="#ProductMeasureUnitList_Model">ProductMeasureUnitList_Model</a></li>
@@ -2748,8 +2749,21 @@
 <a href="#Product_Model">Model: Product_Model</a><h2>get_list</h2>
 <a href="#ProductList_Model">Model: ProductList_Model</a><h2>get_object</h2>
 <a href="#ProductDialog_Model">Model: ProductDialog_Model</a><h2>get_list_for_order</h2>
-<a href="#ProductList_Model">Model: ProductList_Model</a><h2>get_filter_list</h2>
-<a href="#ProductFilterList_Model">Model: ProductFilterList_Model</a>
+<a href="#ProductList_Model">Model: ProductList_Model</a><h2>upsert</h2>
+<a href="#Product_Model">Model: Product_Model</a><h2>create_in_1c</h2>
+<a href="#Product_Model">Model: Product_Model</a><h2>get_filter_list</h2>
+<a href="#ProductFilterList_Model">Model: ProductFilterList_Model</a><h2>complete</h2>
+<a href="#ProductComplete_Model">Model: ProductComplete_Model</a><h2>complete_from_1c</h2>
+<p>Arguments:</p>
+<div class="content_item content_item2">
+<h3>pattern</h3>
+<p></p>
+<div class="content_item content_item3">
+<p>Type:String</p>
+<p>Required:
+								Да</p>
+</div>
+</div>
 </div>
 </div>
 <div id="Product1cName_Controller" class="content_box">
@@ -8276,6 +8290,12 @@
 <div>Required:</div>
 <div>Length:100</div>
 <div>Precision:</div>
+<h2>name_for_print</h2>
+<div>Type:Text</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
 <h2>mes_length_exists</h2>
 <div>Type:Bool</div>
 <div>Primary key:</div>
@@ -8558,6 +8578,12 @@
 <div>Required:</div>
 <div>Length:</div>
 <div>Precision:</div>
+<h2>ref_1c</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:36</div>
+<div>Precision:</div>
 </div>
 </div>
 <div id="Product1cName_Model" class="content_box">
@@ -8623,6 +8649,30 @@
 <div>Primary key:</div>
 <div>Required:</div>
 <div>Length:100</div>
+<div>Precision:</div>
+</div>
+</div>
+<div id="ProductComplete_Model" class="content_box">
+<h1>ProductComplete_Model</h1>
+<div class="content_item">
+<p>Поля:</p>
+<h2>ref</h2>
+<div>Type:Int</div>
+<div>Primary key:TRUE</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
+<div>Precision:</div>
+<h2>name_fulll</h2>
+<div>Type:String</div>
+<div>Primary key:</div>
+<div>Required:</div>
+<div>Length:</div>
 <div>Precision:</div>
 </div>
 </div>

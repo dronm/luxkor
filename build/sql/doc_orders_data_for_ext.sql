@@ -84,11 +84,8 @@ CREATE OR REPLACE VIEW doc_orders_data_for_ext AS
 		p.fin_group,
 		p.analit_group,
 		
-		products_descr(p,
-			t.mes_length,t.mes_width,t.mes_height,
-			TRUE
-			,h.firm_id
-			) AS product_name,
+		p.name AS product_name,
+		p.ref_1c AS product_ref,
 		
 		t.mes_length AS mes_length,
 		t.mes_width AS mes_width,
@@ -191,5 +188,4 @@ CREATE OR REPLACE VIEW doc_orders_data_for_ext AS
 		
 	LEFT JOIN sale_store_addresses AS ss ON ss.id = h.sale_store_address_id
 	;
-ALTER TABLE doc_orders_data_for_ext OWNER TO polimerplast;
 

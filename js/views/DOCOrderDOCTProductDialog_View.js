@@ -37,18 +37,58 @@ function DOCOrderDOCTProductDialog_View(id,options){
 				self.onWarehouseSelected(e.target.options[e.target.selectedIndex].value);
 		}		
 	};	
+	this.m_evOnProductName = function (e) {
+		self.m_btnAddTo1c.setEnabled(true);
+		self.m_ctrlNameForPrint.setValue("");
+	}
 	//******* ПАНЕЛЬ НАИМЕНОВАНИЕ*************
 	var cont=new ControlContainer("product_cont","div",{"className":"row"});
 	//Наименование
-	var ctrl = new ProductForOrderEditObject({
-		"fieldId":"product_id",
-		"controlId":id+"_product",
-		"inLine":false
-		});
-	this.bindControl(ctrl,
+	// var ctrl = new ProductForOrderEditObject({
+	this.m_productName = new ProductEditObject("product_id",
+		id+"_product",
+		false,
+		{ 
+			extraFields: ["ref", "name_full"],
+			onClear: function(){
+				self.m_btnAddTo1c.setEnabled(true);
+			},
+			onSelected: function(row){
+				self.m_ctrlNameForPrint.setValue(row.getAttribute("name_full"));
+				self.m_btnAddTo1c.setEnabled(false);
+				self.createProduct();
+			}
+		}
+	);
+	this.bindControl(this.m_productName,
 		{"modelId":"DOCOrderDOCTProductDialog_Model","valueFieldId":"product_descr","keyFieldIds":["product_id"]},
 		{"valueFieldId":null,"keyFieldIds":["product_id"]});	
-	cont.addElement(ctrl);
+	cont.addElement(this.m_productName);
+
+	//for 1c
+	this.m_ctrlNameForPrint = new EditString(id+"_name_for_print",{
+		"labelCaption":"Наименование для печати:",
+		"name":"name_for_print",
+		"tableLayout":false,
+		"buttonClear":false,
+		"attrs":{"maxlength":500,"size":5}}
+	);
+	cont.addElement(this.m_ctrlNameForPrint);
+
+	this.m_btnAddTo1c = new ButtonCmd(id+"btnAddTo1c",
+					{"caption":"Создать в 1с",
+					//"enabled":false,
+					"onClick":function(){
+						self.onCreateIn1c();
+					},
+					"attrs":{
+						"title":"создать номенклатуру в 1с"
+					}
+				}
+			);
+	cont.addElement(this.m_btnAddTo1c);
+
+	//
 	//Склад из списка складов продукции
 	this.m_WarehouseCtrl = new OrderWarehouseEditObject("warehouse_id",id+"_warehouse",false,options.params.warehouseId);
 	cont.addElement(this.m_WarehouseCtrl);
@@ -79,7 +119,7 @@ DOCOrderDOCTProductDialog_View.prototype.onProductSelected = function(productId)
 		this.m_WarehouseCtrl.setByIndex(1);		
 	}
 	
-	this.setWHouseWarn();
+	// this.setWHouseWarn();
 	
 	this.m_params.warehouseId = this.m_WarehouseCtrl.getFieldValue();
 	/*
@@ -246,7 +286,7 @@ DOCOrderDOCTProductDialog_View.prototype.onGetProductAttrs = function(model){
 	var sub_cont =new ControlContainer("quant_cont","div",{"className":"row"});
 	this.m_quantCtrl = new DOCOrderQuantEdit(id+"_quant",
 		{"name":"quant","tableLayout":false,
-		"is_int":(model.getFieldValue("is_int")=="true"),
+		"is_int": true,
 		"editContClassName":"input-group "+get_bs_col()+"6",
 		"attrs":{"maxlength":"19","required":"required"},
 		"notZero":true,		
@@ -268,12 +308,12 @@ DOCOrderDOCTProductDialog_View.prototype.onGetProductAttrs = function(model){
 		"inLine":true,
 		"productId":productId,
 		"options":{"winObj":this.m_winObj,
-			"editContClassName":"input-group "+get_bs_col()+"6",
-			"events":{
-				"change":function(){
-					self.calcQuant();
-				}
-			}
+			"editContClassName":"input-group "+get_bs_col()+"6"
+			// "events":{
+			// 	"change":function(){
+			// 		// self.calcQuant();
+			// 	}
+			// }
 		}
 		});
 	//var mu_descr = (this.m_isNew)? "base_measure_unit_descr":"measure_unit_descr";
@@ -410,12 +450,7 @@ DOCOrderDOCTProductDialog_View.prototype.onGetProductAttrs = function(model){
 		"events":{
 				"input":function(){
 					//пересчет суммы
-					var tot = toFloat(self.m_totPriceCtrl.getValue())*toFloat(self.m_totQuantCtrl.getValue());
-					//can be round request
-					if(self.m_priceRoundCtrl.getValue()=="true"){
-						tot = Math.ceil(tot);
-					}
-					self.m_totSumCtrl.setValue(tot.toFixed(2));
+					self.calcTotals();
 					self.m_priceEditted = true;
 				}
 			}			
@@ -460,10 +495,10 @@ DOCOrderDOCTProductDialog_View.prototype.onGetProductAttrs = function(model){
 DOCOrderDOCTProductDialog_View.prototype.onWarehouseSelected = function(warehouseId){
 	//обновим список с продукцией
 	var ctrl = this.getDataControl(this.getId()+"_product").control;
-	ctrl.setWarehouseId(warehouseId);
-	ctrl.onRefresh();
+	// ctrl.setWarehouseId(warehouseId);
+	// ctrl.onRefresh();
 	
-	this.setWHouseWarn();	
+	// this.setWHouseWarn();	
 		
 	this.m_params.warehouseId = warehouseId;
 	this.calcTotals();
@@ -480,6 +515,10 @@ DOCOrderDOCTProductDialog_View.prototype.toDOM = function(parent){
 		this.m_WarehouseCtrl.getNode(),
 		"change", this.m_evOnWHChange
 	);
+	EventHandler.addEvent(
+		this.m_productName.getNode(),
+		"input", this.m_evOnProductName
+	);
 }
 DOCOrderDOCTProductDialog_View.prototype.removeDOM = function(){
 	DOCOrderDOCTProductDialog_View.superclass.removeDOM.call(this);
@@ -491,6 +530,10 @@ DOCOrderDOCTProductDialog_View.prototype.removeDOM = function(){
 	EventHandler.removeEvent(
 		this.m_WarehouseCtrl.getNode(),
 		"change", this.m_evOnWHChange
+	);
+	EventHandler.removeEvent(
+		this.m_productName.getNode(),
+		"change", this.m_evOnProductName
 	);
 	if (this.m_packCtrl){
 		EventHandler.removeEvent(
@@ -523,94 +566,13 @@ DOCOrderDOCTProductDialog_View.prototype.onWriteOk = function(resp){
 	this.m_headWarehouseCtrl.setByFieldId(this.m_WarehouseCtrl.getValue());
 }
 DOCOrderDOCTProductDialog_View.prototype.calcTotals = function(){
-	var contr = new DOCOrder_Controller(new ServConnector(HOST_NAME));
-	var id = this.getId();
-	var par_pack = (this.m_packNotFree);
-	var par_quant = parseFloat(this.getDataControlValue(id+"_quant"));
-	var par_measure_unit_id = this.getDataControlValue(id+"_measure_unit");
-	var par_client_id = this.m_params.clientId;
-	var par_wh_id = this.m_params.warehouseId;
-	var par_product_id = this.getDataControlValue(id+"_product");
-	var par_mes_l = 0;
-	var par_mes_w = 0;
-	var par_mes_h = 0;	
-	if (this.viewControlExists(id+"_mes_length")){
-		par_mes_l = parseInt(this.getDataControlValue(id+"_mes_length"));
-	}
-	if (this.viewControlExists(id+"_mes_width")){
-		par_mes_w = parseInt(this.getDataControlValue(id+"_mes_width"));
-	}
-	if (this.viewControlExists(id+"_mes_height")){
-		par_mes_h = parseInt(this.getDataControlValue(id+"_mes_height"));
-	}
-	/*
-	console.log("par_measure_unit_id="+par_measure_unit_id);
-	console.log("par_wh_id="+par_wh_id);
-	console.log("par_client_id="+par_client_id);
-	console.log("par_product_id="+par_product_id);
-	console.log("par_mes_l="+par_mes_l);
-	console.log("par_mes_w="+par_mes_w);
-	console.log("par_mes_h="+par_mes_h);
-	
-	console.log("delivTotal="+this.m_params.delivTotal);
-	console.log("delivAddToCost="+this.m_params.delivAddToCost);
-	*/
-	if (
-		// !par_quant
-		(par_measure_unit_id=="undefined")
-		||!par_wh_id
-		||(!par_client_id
-			&&SERV_VARS.ROLE_ID!="client")
-		||!par_product_id
-	){
-		this.setTotals({
-			"base_quant":0,
-			"volume_m":0,
-			"weight_m":0,
-			"price":0,
-			"total":0
-		});	
-	}
-	else{
-		var self = this;
-		contr.run("calc_totals",{
-			"async":true,
-			"errControl":this.getErrorControl(),
-			"params":{
-					"warehouse_id":par_wh_id,
-					"client_id":par_client_id,
-					"product_id":par_product_id,
-					"mes_length":par_mes_l,
-					"mes_width":par_mes_w,
-					"mes_height":par_mes_h,
-					"quant":par_quant,
-					"measure_unit_id":par_measure_unit_id,
-					"pack":par_pack,
-					"pack_in_price":(this.m_packNotFree)? this.getDataControlValue(id+"_pack_in_price"):"",
-					"deliv_to_third_party":false,
-					"price_edit":(SERV_VARS.ROLE_ID=="client"||(this.m_isNew&&!this.m_isCopy&&!this.m_priceEditted))? false:this.getDataControlValue(id+"_price_edit"),
-					"price_round":this.getDataControlValue(id+"_price_round"),
-					"price":this.m_totPriceCtrl.getValue()
-			},
-			"func":function(resp){
-				var m = resp.getModelById("DOCOrder_Model");
-				m.setActive(true);
-				if (m.getNextRow()){
-					self.setTotals({
-						"base_quant":m.getFieldValue("base_quant"),
-						"volume_m":m.getFieldValue("volume_m"),
-						"weight_t":m.getFieldValue("weight_t"),
-						"price":m.getFieldValue("price"),
-						"total":m.getFieldValue("total")
-					});
-				}
-				//measure units check
-				self.measureUnitsCheck(resp);				
-			}
-		}
-		);
-	}
+	const quant = parseFloat(this.m_quantCtrl.getValue());
+	const price = parseFloat(this.m_totPriceCtrl.getValue());
+	const tot = (isNaN(quant) | isNaN(price))? 0 : quant * price;
+	this.m_totSumCtrl.setValue(tot.toFixed(2));
+	console.log(quant,price,tot)
 }
+
 DOCOrderDOCTProductDialog_View.prototype.setTotals = function(struc){
 	this.m_totQuantCtrl.setValue(struc.base_quant);
 	// this.m_totVolCtrl.setValue(struc.volume_m);
@@ -721,3 +683,79 @@ DOCOrderDOCTProductDialog_View.prototype.setWHouseWarn = function(){
 	}
 }
 
+DOCOrderDOCTProductDialog_View.prototype.onCreateIn1c = function(){
+	const contr = new Product_Controller(new ServConnector(HOST_NAME));
+	const self = this;
+
+	this.m_btnAddTo1c.setEnabled(false);
+	this.m_productName.setEnabled(false);
+	this.m_ctrlNameForPrint.setEnabled(false);
+
+	contr.run("create_in_1c",{
+		"params":{
+			"name":this.m_productName.getValue(),
+			"name_for_print":this.m_ctrlNameForPrint.getValue(),
+			"base_measure_unit_id": 1, //шт
+			"warehouse_id": this.m_WarehouseCtrl.getValue()
+		},
+		"func":function(resp){
+			if (resp.modelExists("ProductDialog_Model")){
+				var m = resp.getModelById("ProductDialog_Model",true);
+				if(m.getNextRow()){
+					console.log("new prod ref:",m.getFieldValue("ref_1c"))
+					self.m_productName.m_node.setAttribute("fkey_product_id", m.getFieldValue("id"));
+					self.m_productName.m_node.setAttribute("ref", m.getFieldValue("ref_1c"));
+					self.m_productName.m_node.classList.remove("error");
+					self.m_btnAddTo1c.setEnabled(false);
+					self.m_ctrlNameForPrint.setEnabled(true);
+					self.m_productName.setEnabled(true);
+
+					self.onGetProductAttrs(m);
+				}
+			}
+		},
+		"err":function(resp,errCode,errStr){
+			self.m_btnAddTo1c.setEnabled(true);
+			self.m_productName.setEnabled(true);
+			self.m_ctrlNameForPrint.setEnabled(true);
+
+			window.showTempError(errStr, null, ERR_MSG_WAIT_MS);
+		}
+	});				
+
+}
+
+DOCOrderDOCTProductDialog_View.prototype.createProduct = function(){
+	const name = this.m_productName.getValue();
+	if(!name || !name.length){
+		return;
+	}
+	const ref1c = this.m_productName.m_node.getAttribute("ref");
+	if(!ref1c || !ref1c.length){
+		return;
+	}
+
+	const contr = new Product_Controller(new ServConnector(HOST_NAME));
+	const self = this;
+	contr.run("upsert",{
+		"params":{
+			"name": name,
+			"name_for_print":this.m_ctrlNameForPrint.getValue(),
+			"base_measure_unit_id": 1, //шт
+			"warehouse_id": this.m_WarehouseCtrl.getValue(),
+			"ref_1c": ref1c
+		},
+		"func":function(resp){
+			if (resp.modelExists("ProductDialog_Model")){
+				var m = resp.getModelById("ProductDialog_Model",true);
+				if(m.getNextRow()){
+					self.m_productName.m_node.setAttribute("fkey_product_id", m.getFieldValue("id"));
+					self.onGetProductAttrs(m);
+				}
+			}
+		},
+		"err":function(resp,errCode,errStr){
+			window.showTempError(errStr, null, ERR_MSG_WAIT_MS);
+		}
+	});				
+}

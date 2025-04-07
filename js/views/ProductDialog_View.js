@@ -67,6 +67,24 @@ function ProductDialog_View(id,options){
 	this.addControl(ctrl);
 	
 
+	ctrl = new EditString(id+"_name_for_print",
+		{"labelCaption":"Наименование для печати:",
+		"name":"name_for_print",
+		"buttonClear":false,
+		"tableLayout":false,
+		"attrs":{"maxlength":5000,
+			"size":5000,
+			"required":"required"
+			}
+		}
+	);
+	this.bindControl(ctrl,
+		{"modelId":model_id,
+		"valueFieldId":"name_for_print",
+		"keyFieldIds":null},
+	{"valueFieldId":"name_for_print","keyFieldIds":null});	
+	this.addControl(ctrl);
+
 	//номенклатурная группа В комплексной не используется!!!
 	/*
 	ctrl = new ProductGroupEdit(

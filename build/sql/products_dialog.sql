@@ -62,13 +62,14 @@ CREATE OR REPLACE VIEW products_dialog AS
 		
 		p.fin_group,
 		p.deleted,
-		p.analit_group		
-	
+		p.analit_group,		
+		p.name_for_print,
+		p.ref_1c
+
 	FROM products AS p
 	LEFT JOIN measure_units AS mu ON mu.id=p.base_measure_unit_id
 	LEFT JOIN measure_units AS mu_o ON mu_o.id=p.order_measure_unit_id
 	LEFT JOIN sert_types AS sert ON sert.id=p.sert_type_id
 	LEFT JOIN product_groups AS pg ON pg.id=p.product_group_id
 	ORDER BY p.name;
-ALTER TABLE products_dialog OWNER TO polimerplast;
 

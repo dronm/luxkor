@@ -43,6 +43,14 @@ class Product_Model extends ModelSQL{
 		$this->addField($f_name);
 		//********************
 		
+		//*** Field name_for_print ***
+		$f_opts = array();
+		$f_opts['id']="name_for_print";
+						
+		$f_name_for_print=new FieldSQLText($this->getDbLink(),$this->getDbName(),$this->getTableName(),"name_for_print",$f_opts);
+		$this->addField($f_name_for_print);
+		//********************
+		
 		//*** Field mes_length_exists ***
 		$f_opts = array();
 		$f_opts['id']="mes_length_exists";
@@ -428,6 +436,15 @@ class Product_Model extends ModelSQL{
 						
 		$f_deleted=new FieldSQLBool($this->getDbLink(),$this->getDbName(),$this->getTableName(),"deleted",$f_opts);
 		$this->addField($f_deleted);
+		//********************
+		
+		//*** Field ref_1c ***
+		$f_opts = array();
+		$f_opts['length']=36;
+		$f_opts['id']="ref_1c";
+						
+		$f_ref_1c=new FieldSQLString($this->getDbLink(),$this->getDbName(),$this->getTableName(),"ref_1c",$f_opts);
+		$this->addField($f_ref_1c);
 		//********************
 	
 		$order = new ModelOrderSQL();		

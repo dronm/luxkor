@@ -7,9 +7,9 @@ CREATE OR REPLACE FUNCTION doc_orders_t_tmp_products_process()
 $BODY$
 BEGIN
 	IF (TG_WHEN='BEFORE' AND TG_OP='INSERT') THEN
-		IF NOT doc_orders_t_tmp_products_can_add(NEW.view_id,NEW.product_id) THEN
-			RAISE 'Данный вид продукции невозможно отгрузить с другими видами продукции документа!';
-		END IF;
+		-- IF NOT doc_orders_t_tmp_products_can_add(NEW.view_id,NEW.product_id) THEN
+		-- 	RAISE 'Данный вид продукции невозможно отгрузить с другими видами продукции документа!';
+		-- END IF;
 		
 		
 		SELECT coalesce(MAX(t.line_number),0)+1 INTO NEW.line_number
@@ -69,5 +69,3 @@ END;
 $BODY$
 LANGUAGE plpgsql VOLATILE
   COST 100;
-ALTER FUNCTION doc_orders_t_tmp_products_process()
-  OWNER TO polimerplast;

@@ -120,44 +120,44 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 
 	}
 
-	public function upsert($pm){
+	public function insertFrom1c($params){
 		$l = $this->getDbLinkMaster();
-		$params = new ParamsSQL($pm,$l);
-		$params->setValidated("name",DT_STRING);
-		$params->setValidated("name_for_print",DT_STRING);
-		$params->setValidated("base_measure_unit_id",DT_INT);
-		$params->setValidated("ref_1c",DT_STRING);
-		$params->setValidated("warehouse_id",DT_INT);
 
-		$dbParams = [
-			"ref_1c"				=> $params->getParamById('ref_1c'),
-			"name"					=> $params->getParamById('name'),
-			"name_for_print"		=> $params->getParamById('name_for_print'),
-			"warehouse_id"			=> $params->getParamById('warehouse_id'),
-			"base_measure_unit_id"	=> $params->getParamById('base_measure_unit_id')
-		];
-		$this->add_product($dbParams);
-	}
-
-	//adds new product to database and put its dialog model to return models
-	//params: values for database, quoted strings
-	public function add_product($params){
-		$l = $this->getDbLinkMaster();
-		$name				= $params['name'];
-		$name_for_print		= $params['name_for_print'];
-		$warehouse_id		= $params['warehouse_id'];
-		$measure_unit_id	= $params['base_measure_unit_id'];
-		$ref_1c				= $params['ref_1c'];
-
-		$ar = $l->query_first(sprintf(
-		"INSERT INTO products (name, name_for_print, ref_1c, base_measure_unit_id)
+		$ar = $this->query_first(sprintf(
+		"INSERT INTO products (name, name_for_print, ref_1c, measure_unit_id)
 		VALUES (
 			%s, %s, %s, %d
-		) ON CONFLICT (ref_1c) DO UPDATE
+		) ON CONFLICT ref_1c DO UPDATE
 		SET
 			name = excluded.name, 
-			name_for_print = excluded.name_for_print, 
-			base_measure_unit_id = excluded.base_measure_unit_id
+			excluded.name_for_print, 
+			measure_unit_id = excluded.measure_unit_id
+		RETURNING id",
+			$params["name"], $params["name_for_print"], $params["ref_1c"], $params["measure_unit_id"],
+		));
+
+		if(!is_array($ar) || !count($ar) || !isset($ar["id"])){
+			throw new Exception("INSERT failed");
+		}
+
+		$model = new ProductDialog_Model($l);
+		$model->query(
+			sprintf("SELECT * FROM products_dialog WHERE id = %d", $ar["id"]),
+		TRUE);
+		$this->addModel($model);
+	}
+
+	public function upsert($pm){
+		$l = $this->getDbLinkMaster();
+		$ar = $this->query_first(sprintf(
+		"INSERT INTO products (name, name_for_print, ref_1c, measure_unit_id)
+		VALUES (
+			%s, %s, %s, %d
+		) ON CONFLICT ref_1c DO UPDATE
+		SET
+			name = excluded.name, 
+			excluded.name_for_print, 
+			measure_unit_id = excluded.measure_unit_id
 		RETURNING id",
 			$name, $name_for_print, $ref_1c, $measure_unit_id,
 		));
@@ -165,30 +165,6 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 		if(!is_array($ar) || !count($ar) || !isset($ar["id"])){
 			throw new Exception("INSERT failed");
 		}
-
-		//measure unit
-		$q = sprintf(
-			"INSERT INTO product_measure_units (
-			product_id, measure_unit_id, calc_formula, in_use
-			)
-		VALUES (
-			%d, %d, '1', true
-		) ON CONFLICT (product_id,measure_unit_id) DO NOTHING",
-			$ar["id"], $measure_unit_id,
-		);
-		$l->query($q);
-
-		//product warehouses
-		$q = sprintf(
-			"INSERT INTO product_warehouses (
-			product_id, warehouse_id
-			)
-		VALUES (
-			%d, %d
-		) ON CONFLICT (product_id,warehouse_id) DO NOTHING",
-			$ar["id"], $warehouse_id,
-		);
-		$l->query($q);
 
 		$model = new ProductDialog_Model($l);
 		$model->query(
@@ -198,35 +174,20 @@ class <xsl:value-of select="@id"/>_Controller extends ControllerSQL{
 	}
 
 	public function create_in_1c($pm){
-		//mu
-		$l = $this->getDbLinkMaster();
-		$ar = $l->query_first(sprintf(
-			"SELECT ext_id 
-			FROM measure_units
-			WHERE id = %d"
-			,$pm->getParamValue('base_measure_unit_id')
-		));
-		if(!is_array($ar) || !count($ar) || !isset($ar["ext_id"])){
-			throw new Exception("Measure unit not found by ID");
-		}
-
 		$xml = NULL;
 		$params1c = [
 			"name" => $pm->getParamValue('name'),
-			"name_full" => $pm->getParamValue('name_for_print'),
-			"mu_ref" => $ar["ext_id"]
+			"name_full" => $pm->getParamValue('name_for_print')
 		];
 		ExtProg::createProductForLuxkor($params1c, $xml);
 
-		$dbParams = [
-			"ref_1c"				=> "'". (string) $xml->product->ref."'",
-			"name"					=> "'". (string) $xml->product->name."'",
-			"name_for_print"		=> "'". (string) $xml->product->name_full."'",
-			"warehouse_id"			=> intval($pm->getParamValue('warehouse_id')),
-			"base_measure_unit_id"	=> intval($pm->getParamValue('base_measure_unit_id'))
+		$params1c = [
+			"ref_1c" => (string) $xml->product->ref_1c,
+			"name" => (string) $xml->product->name,
+			"name_full" => (string) $xml->product->name_full
 		];
 
-		$this->add_product($dbParams);
+		$this->insertFrom1c($params1c);
 	}
 
 </xsl:template>

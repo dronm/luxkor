@@ -701,6 +701,21 @@ class ViewBase extends ViewHTMLXSLT {
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/FirmList_Model.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'models/FirmList_Model.js')) ));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/DOCOrder_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/DOCOrder_Controller.js')) ));
 		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/DOCOrder_Model.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'models/DOCOrder_Model.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Product_Model.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'models/Product_Model.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Product_Model.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'models/Product_Model.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/ProductComplete_Model.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'models/ProductComplete_Model.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'models/Product_Model.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'models/Product_Model.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
+		$this->addJsModel(new ModelJavaScript(USER_JS_PATH.'controllers/Product_Controller.js?'.date("Y-m-dTH:i:s", filemtime(USER_JS_PATH.'controllers/Product_Controller.js')) ));
 				
 			if (isset($_SESSION['scriptId'])){
 				$script_id = $_SESSION['scriptId'];

@@ -2,7 +2,8 @@
 <metadata debug="TRUE" owner="polimerplast" dataSchema="public">
 	<versions>
 		<version dateOpen="2016-06-07 07:05" dateClose="2025-02-01 03:40:38">1.001 
-		<lastBuild>2025-02-01 03:40:34</lastBuild></version>
+		<lastBuild>2025-04-07 11:06:58</lastBuild></version>
+		<version dateOpen="2025-04-01 12:28:31" dateClose="2025-04-07 11:07:02">1.002</version>
 	</versions>
 	<globalFilters>
 		<field id="client_id"/>
@@ -593,6 +594,7 @@
 			</defaultOrder>
 			<field id="id" dataType="Int" primaryKey="TRUE" autoInc="TRUE" required="TRUE"/>
 			<field id="name" dataType="String" length="100"/>
+			<field id="name_for_print" dataType="Text"/>
 			<field id="mes_length_exists" dataType="Bool"/>
 			<field id="mes_length_name" dataType="String" length="50"/>
 			<field id="mes_length_fix" dataType="Bool"/>
@@ -643,6 +645,10 @@
 			<field id="fin_group" dataType="Text"/>
 			<field id="analit_group" dataType="Text"/>
 			<field id="deleted" dataType="Bool" defaultValue="FALSE"/>
+			<field id="ref_1c" dataType="String" length="36"/>
+			<index id="products_ref_1c_idx" unique="TRUE">
+				<field id="ref_1c"/>
+			</index>
 		</model>
 		<model id="ProductList" parent="ModelSQL" dataTable="products_list" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE"/>
@@ -653,6 +659,11 @@
 		</model>
 		<model id="ProductDialog" parent="ModelSQL" dataTable="products_dialog" virtual="TRUE">
 			<field id="id" dataType="Int" primaryKey="TRUE"/>
+		</model>
+		<model id="ProductComplete" parent="ModelSQL" dataTable="products_complete" virtual="TRUE">
+			<field id="ref" dataType="Int" primaryKey="TRUE"/>
+			<field id="name" dataType="String"/>
+			<field id="name_fulll" dataType="String"/>
 		</model>
 		<model id="ProductCustomSizePrice" parent="ModelSQL" dataTable="product_custom_size_prices" virtual="FALSE">
 			<field id="product_id" dataType="Int" required="TRUE" refTable="products" refField="id" primaryKey="TRUE"/>
@@ -1897,7 +1908,24 @@
 			<publicMethod id="get_list_for_order" modelId="ProductList">
 				<field id="warehouse_id" dataType="Int" required="TRUE"/>
 			</publicMethod>
+			<publicMethod id="upsert" modelId="Product">
+				<field id="name" dataType="String" length="100"/>
+				<field id="name_for_print" dataType="Text"/>
+				<field id="base_measure_unit_id" dataType="Int"/>
+				<field id="warehouse_id" dataType="Int"/>
+				<field id="ref_1c" dataType="String" length="36"/>
+			</publicMethod>
+			<publicMethod id="create_in_1c" modelId="Product">
+				<field id="name" dataType="String" length="100"/>
+				<field id="name_for_print" dataType="Text"/>
+				<field id="base_measure_unit_id" dataType="Int"/>
+				<field id="warehouse_id" dataType="Int"/>
+			</publicMethod>
 			<publicMethod id="get_filter_list" modelId="ProductFilterList"/>
+			<publicMethod id="complete" modelId="ProductComplete" patternFieldId="name"/>
+			<publicMethod id="complete_from_1c">
+				<field id="pattern" dataType="String" required="TRUE"/>
+			</publicMethod>
 		</controller>
 		<controller id="ProductCustomSizePrice" parentId="ControllerSQL" state="TRUE" noState="TRUE">
 			<publicMethod id="insert" modelId="ProductCustomSizePrice"/>
@@ -3682,6 +3710,21 @@
 		<jsScript file="models/FirmList_Model.js"/>
 		<jsScript file="controllers/DOCOrder_Controller.js"/>
 		<jsScript file="models/DOCOrder_Model.js"/>
+		<jsScript file="models/Product_Model.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="models/Product_Model.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="models/ProductComplete_Model.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="models/Product_Model.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
+		<jsScript file="controllers/Product_Controller.js"/>
 	</jsScripts>
 	<cssScripts>
 		<cssScript file="bootstrap.min.css" compressed="TRUE" standalone="TRUE"/>

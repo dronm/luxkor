@@ -24,7 +24,11 @@ function Product_Controller(servConnector){
 	this.addGetList();
 	this.addGetObject();
 	this.add_get_list_for_order();
+	this.add_upsert();
+	this.add_create_in_1c();
 	this.add_get_filter_list();
+	this.addComplete();
+	this.add_complete_from_1c();
 	
 }
 extend(Product_Controller,ControllerDb);
@@ -37,6 +41,12 @@ extend(Product_Controller,ControllerDb);
 	options = {};
 	
 	var param = new FieldString("name",options);
+	
+	pm.addParam(param);
+	
+	options = {};
+	
+	var param = new FieldText("name_for_print",options);
 	
 	pm.addParam(param);
 	
@@ -319,6 +329,12 @@ extend(Product_Controller,ControllerDb);
 	options = {};
 	
 	var param = new FieldBool("deleted",options);
+	
+	pm.addParam(param);
+	
+	options = {};
+	
+	var param = new FieldString("ref_1c",options);
 	
 	pm.addParam(param);
 	
@@ -349,6 +365,12 @@ extend(Product_Controller,ControllerDb);
 	
 	options = {};
 	
+	var param = new FieldText("name_for_print",options);
+	
+	pm.addParam(param);
+	
+	options = {};
+	
 	var param = new FieldBool("mes_length_exists",options);
 	
 	pm.addParam(param);
@@ -626,6 +648,12 @@ extend(Product_Controller,ControllerDb);
 	options = {};
 	
 	var param = new FieldBool("deleted",options);
+	
+	pm.addParam(param);
+	
+	options = {};
+	
+	var param = new FieldString("ref_1c",options);
 	
 	pm.addParam(param);
 	
@@ -666,9 +694,67 @@ extend(Product_Controller,ControllerDb);
 			
 }
 
+			Product_Controller.prototype.add_upsert = function(){
+	var pm = this.addMethodById('upsert');
+	
+				
+		pm.addParam(new FieldString("name"));
+	
+				
+		pm.addParam(new FieldText("name_for_print"));
+	
+				
+		pm.addParam(new FieldInt("base_measure_unit_id"));
+	
+				
+		pm.addParam(new FieldInt("warehouse_id"));
+	
+				
+		pm.addParam(new FieldString("ref_1c"));
+	
+			
+}
+
+			Product_Controller.prototype.add_create_in_1c = function(){
+	var pm = this.addMethodById('create_in_1c');
+	
+				
+		pm.addParam(new FieldString("name"));
+	
+				
+		pm.addParam(new FieldText("name_for_print"));
+	
+				
+		pm.addParam(new FieldInt("base_measure_unit_id"));
+	
+				
+		pm.addParam(new FieldInt("warehouse_id"));
+	
+			
+}
+
 			Product_Controller.prototype.add_get_filter_list = function(){
 	var pm = this.addMethodById('get_filter_list');
 	
+}
+
+			Product_Controller.prototype.addComplete = function(){
+	Product_Controller.superclass.addComplete.call(this);
+	
+	var options = {};
+	
+	var pm = this.getComplete();
+	pm.addParam(new FieldString("name",options));
+	pm.getParamById(this.PARAM_ORD_FIELDS).setValue("name");
+}
+
+			Product_Controller.prototype.add_complete_from_1c = function(){
+	var pm = this.addMethodById('complete_from_1c');
+	
+				
+		pm.addParam(new FieldString("pattern"));
+	
+			
 }
 
 		

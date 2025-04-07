@@ -1,6 +1,6 @@
 -- Trigger: products_trigger on client_destinations
 
--- DROP TRIGGER products_trigger ON client_destinations;
+-- DROP TRIGGER products_trigger ON products;
 
 CREATE TRIGGER products_trigger
   BEFORE DELETE
